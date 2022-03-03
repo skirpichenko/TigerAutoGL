@@ -163,8 +163,18 @@ RUN sudo mkdir /katib
 RUN sudo chgrp -R 0 /katib \
   && sudo chmod -R g+rwX /katib
 
-RUN git clone https://github.com/THUMNLab/AutoGL.git \
-  && cd AutoGL \
-  && python setup.py install
+RUN conda install -c conda-forge -y websockets \
+ && conda clean -ya
+
+RUN pip install nni
+
+RUN pip install obd==0.7.0
+
+#RUN conda install -c conda-forge -y ogb \
+# && conda clean -ya
+
+RUN git clone https://github.com/THUMNLab/AutoGL.git
+COPY setup.py ./AutoGL/setup.py
+RUN cd AutoGL && python setup.py install
 
 ENTRYPOINT ["python3", "/opt/autogl/main.py"]
