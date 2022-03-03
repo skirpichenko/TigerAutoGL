@@ -169,12 +169,6 @@ RUN conda install -c conda-forge -y websockets \
 RUN pip install nni obd==0.7.0
 
 RUN git clone https://github.com/skirpichenko/TigerAutoGL.git
+RUN cd ./TigerAutoGL/AutoGL && python setup.py install
 
-#RUN conda install -c conda-forge -y ogb \
-# && conda clean -ya
-
-#RUN git clone https://github.com/THUMNLab/AutoGL.git
-#COPY setup.py ./AutoGL/setup.py
-#RUN cd AutoGL && python setup.py install
-
-#ENTRYPOINT ["python3", "/home/user/AutoGL/examples/node_classification.py"]
+ENTRYPOINT ["python3", "/home/user/TigerAutoGL/containers/autogl/main.py"]
