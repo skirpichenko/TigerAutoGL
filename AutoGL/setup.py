@@ -45,7 +45,7 @@ setup(
         'networkx',
         'numpy',
         'netlsd',
-        'ogb',
+     #   'ogb',
         'psutil',
         'pyyaml',
         'requests',

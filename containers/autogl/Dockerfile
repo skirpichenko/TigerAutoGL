@@ -166,15 +166,15 @@ RUN sudo chgrp -R 0 /katib \
 RUN conda install -c conda-forge -y websockets \
  && conda clean -ya
 
-RUN pip install nni
+RUN pip install nni obd==0.7.0
 
-RUN pip install obd==0.7.0
+RUN git clone https://github.com/skirpichenko/TigerAutoGL.git
 
 #RUN conda install -c conda-forge -y ogb \
 # && conda clean -ya
 
-RUN git clone https://github.com/THUMNLab/AutoGL.git
-COPY setup.py ./AutoGL/setup.py
-RUN cd AutoGL && python setup.py install
+#RUN git clone https://github.com/THUMNLab/AutoGL.git
+#COPY setup.py ./AutoGL/setup.py
+#RUN cd AutoGL && python setup.py install
 
-ENTRYPOINT ["python3", "/opt/autogl/main.py"]
+#ENTRYPOINT ["python3", "/home/user/AutoGL/examples/node_classification.py"]
