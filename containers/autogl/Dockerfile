@@ -102,57 +102,57 @@ ENV CONDA_AUTO_UPDATE_CONDA=false
 
 # Create a Python 3.6 environment.
 RUN /home/user/miniconda/bin/conda install conda-build \
- && /home/user/miniconda/bin/conda create -y --name py36 python=3.6.5 \
+ && /home/user/miniconda/bin/conda create -y --name py37 python=3.7.10 \
  && /home/user/miniconda/bin/conda clean -ya
-ENV CONDA_DEFAULT_ENV=py36
+ENV CONDA_DEFAULT_ENV=py37
 ENV CONDA_PREFIX=/home/user/miniconda/envs/$CONDA_DEFAULT_ENV
 ENV PATH=$CONDA_PREFIX/bin:$PATH
 
 # CUDA 10.0-specific steps.
 RUN conda install -y -c pytorch \
     cudatoolkit=10.1 \
-    "pytorch=1.4.0=py3.6_cuda10.1.243_cudnn7.6.3_0" \
-    torchvision=0.5.0=py36_cu101 \
+    "pytorch=1.6.0=py3.7_cuda10.1.243_cudnn7.6.3_0" \
+    torchvision=0.7.0=py37_cu101 \
  && conda clean -ya
 
 # Install HDF5 Python bindings.
-RUN conda install -y h5py=2.8.0 \
+RUN conda install -y h5py \
  && conda clean -ya
-RUN pip install h5py-cache==1.0
+RUN pip install h5py-cache
 
 # Install TorchNet, a high-level framework for PyTorch.
-RUN pip install torchnet==0.0.4
+RUN pip install torchnet
 
 # Install Requests, a Python library for making HTTP requests.
-RUN conda install -y requests=2.19.1 \
+RUN conda install -y requests \
  && conda clean -ya
 
-# Install Graphviz.
-RUN conda install -y graphviz=2.40.1 python-graphviz=0.8.4 \
- && conda clean -ya
+ # Install Graphviz.
+#RUN conda install -y graphviz python-graphviz \
+# && conda clean -ya
 
-# Install OpenCV3 Python bindings.
+ # Install OpenCV3 Python bindings.
 RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends \
     libgtk2.0-0 \
     libcanberra-gtk-module \
  && sudo rm -rf /var/lib/apt/lists/*
-RUN conda install -y -c menpo opencv3=3.1.0 \
- && conda clean -ya
+#RUN conda install -y -c menpo opencv3 \
+# && conda clean -ya
 
-# Install PyG.
+ # Install PyG.
 RUN CPATH=/usr/local/cuda/include:$CPATH \
  && LD_LIBRARY_PATH=/usr/local/cuda/lib64:$LD_LIBRARY_PATH \
  && DYLD_LIBRARY_PATH=/usr/local/cuda/lib:$DYLD_LIBRARY_PATH
 
 RUN pip install scipy
 
-RUN pip install --no-index torch-scatter -f https://data.pyg.org/whl/torch-1.4.0+cu101.html \
- && pip install --no-index torch-sparse -f https://data.pyg.org/whl/torch-1.4.0+cu101.html \
- && pip install --no-index torch-cluster -f https://data.pyg.org/whl/torch-1.4.0+cu101.html \
- && pip install --no-index torch-spline-conv -f https://data.pyg.org/whl/torch-1.4.0+cu101.html \
+RUN pip install --no-index torch-scatter -f https://data.pyg.org/whl/torch-1.6.0+cu101.html \
+ && pip install --no-index torch-sparse -f https://data.pyg.org/whl/torch-1.6.0+cu101.html \
+ && pip install --no-index torch-cluster -f https://data.pyg.org/whl/torch-1.6.0+cu101.html \
+ && pip install --no-index torch-spline-conv -f https://data.pyg.org/whl/torch-1.6.0+cu101.html \
  && pip install torch-geometric
 
-# Set the default command to python3.
+ # Set the default command to python3.
 CMD ["python3"]
 
 WORKDIR /home/user
@@ -166,9 +166,7 @@ RUN sudo chgrp -R 0 /katib \
 RUN conda install -c conda-forge -y websockets \
  && conda clean -ya
 
-RUN pip install nni obd==0.7.0
+RUN pip install nni 
 
 RUN git clone https://github.com/skirpichenko/TigerAutoGL.git
 RUN cd ./TigerAutoGL/AutoGL && python setup.py install
-
-ENTRYPOINT ["python3", "/home/user/TigerAutoGL/containers/autogl/main.py"]
