@@ -1,3 +1,4 @@
+git config --global user.email "skirpichenko@gmail.com" && git config --global user.name "Sergey Kirpichenko"
 
 docker build -t autogl .
 

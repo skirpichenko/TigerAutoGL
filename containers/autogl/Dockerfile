@@ -45,5 +45,8 @@ RUN pip install --no-index torch-scatter -f https://data.pyg.org/whl/torch-1.10.
  && pip install --no-index torch-spline-conv -f https://data.pyg.org/whl/torch-1.10.0+cu113.html \
  && pip install torch-geometric
 
-#RUN git clone https://github.com/skirpichenko/TigerAutoGL.git
-#RUN cd ./TigerAutoGL/AutoGL && python setup.py install
+WORKDIR /home/user
+
+RUN git clone https://github.com/skirpichenko/TigerAutoGL.git
+RUN pip install nni 
+RUN cd ./TigerAutoGL/AutoGL && python setup.py install
