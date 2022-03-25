@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--batch-size", default=64, type=int, help="batch size")
     parser.add_argument("--lr", default=0.01, type=float, help="learning rate")
-    parser.add_argument("--optimizer", default="adam", type=str, help="optimizer")
+    parser.add_argument("--activation", default="relu", type=str, help="activation")
     parser.add_argument("--nlayers", default=2, type=int, help="num-layers")
 
     args = parser.parse_args()
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     configs = yaml.load(open(args.configs, "r").read(), Loader=yaml.FullLoader)
     configs['trainer']['hp_space'][2] = {'feasiblePoints': str(args.lr), 'parameterName': 'lr', 'type': 'DISCRETE'}
     configs['models'][0]['hp_space'][0]['feasiblePoints'] = str(args.nlayers)
-  
+    configs['models'][0]['hp_space'][3]['feasiblePoints'] = [str(args.activation)]
     configs["hpo"]["name"] = args.hpo
     configs["hpo"]["max_evals"] = args.max_eval
     autoClassifier = AutoNodeClassifier.from_config(configs)
