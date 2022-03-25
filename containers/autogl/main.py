@@ -32,7 +32,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--configs",
         type=str,
-        default="../../AutoGL/configs/nodeclf_gcn_benchmark_small.yml",
+        default="/home/user/TigerAutoGL/AutoGL/configs/nodeclf_gcn_benchmark_small.yml",
         help="config to use",
     )
     # following arguments will override parameters in the config file
