@@ -7,6 +7,10 @@ from autogl.solver import AutoNodeClassifier
 from autogl.module import Acc
 from autogl.backend import DependentBackend
 
+import logging
+LOGGER = logging.getLogger()
+LOGGER.setLevel(logging.INFO)
+
 if __name__ == "__main__":
 
     from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
@@ -85,4 +89,4 @@ if __name__ == "__main__":
         )
     autoClassifier.get_leaderboard().show()
     acc = autoClassifier.evaluate(metric="acc")
-    print("Validation-accuracy: {:.4f}".format(acc))
+    LOGGER.info("Validation-accuracy={:.4f}".format(acc))
