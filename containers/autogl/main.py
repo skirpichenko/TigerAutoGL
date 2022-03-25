@@ -13,7 +13,7 @@ LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
 
 if __name__ == "__main__":
-    np.random.seed(int(time.time()*10000%1000))
+    np.random.seed(int((time.time()*10000)%1000))
 
     from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
