@@ -42,7 +42,7 @@ if __name__ == "__main__":
     # following arguments will override parameters in the config file
     parser.add_argument("--hpo", type=str, default="tpe", help="hpo methods")
     parser.add_argument(
-        "--max_eval", type=int, default=50, help="max hpo evaluation times"
+        "--max_eval", type=int, default=30, help="max hpo evaluation times"
     )
     parser.add_argument("--seed", type=int, default=0, help="random seed")
     parser.add_argument("--device", default=0, type=int, help="GPU device")
@@ -50,7 +50,7 @@ if __name__ == "__main__":
     parser.add_argument("--batch-size", default=64, type=int, help="batch size")
     parser.add_argument("--lr", default=0.01, type=float, help="learning rate")
     parser.add_argument("--optimizer", default="adam", type=str, help="optimizer")
-    parser.add_argument("--num-layers", default=4, type=int, help="num-layers")
+    parser.add_argument("--nlayers", default=2, type=int, help="num-layers")
 
     args = parser.parse_args()
     if torch.cuda.is_available():
@@ -70,9 +70,9 @@ if __name__ == "__main__":
     num_classes = len(np.unique(label.numpy()))
 
     configs = yaml.load(open(args.configs, "r").read(), Loader=yaml.FullLoader)
-
     configs['trainer']['hp_space'][2] = {'feasiblePoints': str(args.lr), 'parameterName': 'lr', 'type': 'DISCRETE'}
-
+    configs['models'][0]['hp_space'][0]['feasiblePoints'] = str(args.nlayers)
+  
     configs["hpo"]["name"] = args.hpo
     configs["hpo"]["max_evals"] = args.max_eval
     autoClassifier = AutoNodeClassifier.from_config(configs)
