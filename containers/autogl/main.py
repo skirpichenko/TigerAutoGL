@@ -43,6 +43,11 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=0, help="random seed")
     parser.add_argument("--device", default=0, type=int, help="GPU device")
 
+    parser.add_argument("--batch-size", default=64, type=int, help="batch size")
+    parser.add_argument("--lr", default=0.01, type=float, help="learning rate")
+    parser.add_argument("--optimizer", default="adam", type=str, help="optimizer")
+    parser.add_argument("--num-layers", default=4, type=int, help="num-layers")
+
     args = parser.parse_args()
     if torch.cuda.is_available():
         torch.cuda.set_device(args.device)
