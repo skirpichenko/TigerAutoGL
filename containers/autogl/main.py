@@ -85,4 +85,4 @@ if __name__ == "__main__":
         )
     autoClassifier.get_leaderboard().show()
     acc = autoClassifier.evaluate(metric="acc")
-    print("test acc: {:.4f}".format(acc))
+    print("Validation-accuracy: {:.4f}".format(acc))

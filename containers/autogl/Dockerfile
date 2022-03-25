@@ -36,9 +36,6 @@ RUN curl -sLo ~/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-py39
  && rm /app/environment.yml \
  && conda clean -ya
 
-# Set the default command to python3
-CMD ["python3"]
-
 RUN pip install --no-index torch-scatter -f https://data.pyg.org/whl/torch-1.10.0+cu113.html \
  && pip install --no-index torch-sparse -f https://data.pyg.org/whl/torch-1.10.0+cu113.html \
  && pip install --no-index torch-cluster -f https://data.pyg.org/whl/torch-1.10.0+cu113.html \
@@ -46,6 +43,9 @@ RUN pip install --no-index torch-scatter -f https://data.pyg.org/whl/torch-1.10.
  && pip install torch-geometric
 
 WORKDIR /home/user
+
+# Set the default command to python3
+# CMD ["python3"]
 
 RUN git clone https://github.com/skirpichenko/TigerAutoGL.git
 RUN pip install nni 

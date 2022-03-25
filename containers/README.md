@@ -29,3 +29,8 @@ kubectl -n kubeflow-user-example-com get experiment autogl-08 -o yaml
 
 # edit katib config
 kubectl edit configMap katib-config -n kubeflow
+
+# push docker image to github.io (password Ky...!)
+docker login   
+docker image tag autogl skirpichenko/tigergraph:autogl-dev
+docker push skirpichenko/tigergraph:autogl-dev
