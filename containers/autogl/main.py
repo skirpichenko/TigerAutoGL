@@ -70,6 +70,9 @@ if __name__ == "__main__":
     num_classes = len(np.unique(label.numpy()))
 
     configs = yaml.load(open(args.configs, "r").read(), Loader=yaml.FullLoader)
+
+    configs['trainer']['hp_space'][2] = {'feasiblePoints': str(args.lr), 'parameterName': 'lr', 'type': 'DISCRETE'}
+
     configs["hpo"]["name"] = args.hpo
     configs["hpo"]["max_evals"] = args.max_eval
     autoClassifier = AutoNodeClassifier.from_config(configs)
