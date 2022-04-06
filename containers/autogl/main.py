@@ -7,12 +7,16 @@ from autogl.solver import AutoNodeClassifier
 from autogl.module import Acc
 from autogl.backend import DependentBackend
 import time
+import os
 
 import logging
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
 
 if __name__ == "__main__":
+
+    LOGGER.info(os.environ['AUTOGL_SPEC'])
+
     np.random.seed(int((time.time()*10000)%1000))
 
     from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter

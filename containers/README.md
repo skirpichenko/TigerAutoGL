@@ -1,6 +1,6 @@
 git config --global user.email "skirpichenko@gmail.com" && git config --global user.name "Sergey Kirpichenko"
 
-docker build -t autogl .
+docker build --no-cache -t autogl .
 
 # run container
 sudo docker run -t -d -p 3000:3000 autogl 
@@ -34,3 +34,7 @@ kubectl edit configMap katib-config -n kubeflow
 docker login   
 docker image tag autogl skirpichenko/tigergraph:autogl-dev
 docker push skirpichenko/tigergraph:autogl-dev
+
+# update config from a file
+kubectl get configMap katib-config -n kubeflow -o yaml > config.yaml
+kubectl apply -f config.yaml
