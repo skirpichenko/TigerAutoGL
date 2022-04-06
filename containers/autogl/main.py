@@ -15,7 +15,7 @@ LOGGER.setLevel(logging.INFO)
 
 if __name__ == "__main__":
 
-    LOGGER.info(os.environ['AUTOGL_SPEC'])
+    LOGGER.info(os.getenv('AUTOGL_SPEC'))
 
     np.random.seed(int((time.time()*10000)%1000))
 
