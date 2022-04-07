@@ -127,6 +127,8 @@ class OptimizerConfiguration:
     @classmethod
     def _validate_random_setting(cls, algorithm_settings):
         for s in algorithm_settings:
+            if s == 'autogl_spec':
+                continue
             try:
                 if s.name == 'random_state':
                     if not (int(s.value) >= 0):
