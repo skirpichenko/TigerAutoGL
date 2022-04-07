@@ -29,7 +29,7 @@ def serve():
     api_pb2_grpc.add_SuggestionServicer_to_server(service, server)
     health_pb2_grpc.add_HealthServicer_to_server(service, server)
     server.add_insecure_port(DEFAULT_PORT)
-    print("Listening...")
+    print("I am listening...")
     server.start()
     try:
         while True:
