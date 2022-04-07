@@ -41,6 +41,7 @@ class HyperoptService(api_pb2_grpc.SuggestionServicer, HealthServicer):
             request.experiment.spec.algorithm)
 
         if self.is_first_run:
+            logger.info("AutoGL suggestion service")
             logger.info(request)
             logger.info(context)
             search_space = HyperParameterSearchSpace.convert(request.experiment)
