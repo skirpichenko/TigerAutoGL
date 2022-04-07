@@ -21,7 +21,7 @@ su -s ${USER}
 kubectl get pods -n kubeflow
 
 # list pods of specific namespace
- kubectl get pods -n kubeflow-user-example-com
+kubectl get pods -n kubeflow-user-example-com
 
 # show log (add --follow to stream it)
 kubectl logs -n kubeflow-user-example-com random-experiment-my-79rv5gcw metrics-logger-and-collector
