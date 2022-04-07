@@ -1,4 +1,40 @@
-FROM python:3.9
+FROM nvidia/cuda:11.3.1-base-ubuntu20.04
+
+# Install some basic utilities
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates \
+    sudo \
+    git \
+    bzip2 \
+    libx11-6 \
+    wget \
+    pip \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt
+# Set up the Conda environment
+ENV CONDA_AUTO_UPDATE_CONDA=false \
+    PATH=/opt/miniconda/bin:$PATH
+COPY environment.yml /opt/environment.yml
+RUN curl -sLo /opt/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh \
+ && chmod +x /opt/miniconda.sh \
+ && /opt/miniconda.sh -b -p /opt/miniconda \
+ && rm /opt/miniconda.sh \
+ && conda env update -n base -f /opt/environment.yml \
+ && rm /opt/environment.yml \
+ && conda clean -ya
+
+ RUN pip install --no-index torch-scatter -f https://data.pyg.org/whl/torch-1.10.0+cu113.html \
+ && pip install --no-index torch-sparse -f https://data.pyg.org/whl/torch-1.10.0+cu113.html \
+ && pip install --no-index torch-cluster -f https://data.pyg.org/whl/torch-1.10.0+cu113.html \
+ && pip install --no-index torch-spline-conv -f https://data.pyg.org/whl/torch-1.10.0+cu113.html \
+ && pip install torch-geometric \
+ && pip cache purge
+
+RUN git clone https://github.com/skirpichenko/TigerAutoGL.git
+RUN pip install nni 
+RUN cd ./TigerAutoGL/AutoGL && python setup.py install
 
 ENV TARGET_DIR /opt/katib
 ENV SUGGESTION_DIR cmd/suggestion/hyperopt/v1beta1
@@ -24,10 +60,17 @@ ADD ./pkg/ ${TARGET_DIR}/pkg/
 ADD ./${SUGGESTION_DIR}/ ${TARGET_DIR}/${SUGGESTION_DIR}/
 WORKDIR  ${TARGET_DIR}/${SUGGESTION_DIR}
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir cloudpickle
+
+ADD ./run.sh ${TARGET_DIR}/${SUGGESTION_DIR}/
 
 RUN chgrp -R 0 ${TARGET_DIR} \
-  && chmod -R g+rwX ${TARGET_DIR}
+  && chmod -R g+rwX ${TARGET_DIR} \
+  && chmod +X ${TARGET_DIR}/${SUGGESTION_DIR}/run.sh
 
 ENV PYTHONPATH ${TARGET_DIR}:${TARGET_DIR}/pkg/apis/manager/v1beta1/python:${TARGET_DIR}/pkg/apis/manager/health/python
 
-ENTRYPOINT ["python", "main.py"]
+#ENTRYPOINT ["python", "main.py"]
+
+ENTRYPOINT  ./run.sh
+
