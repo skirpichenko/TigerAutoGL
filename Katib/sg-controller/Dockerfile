@@ -32,11 +32,11 @@ RUN curl -sLo /opt/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-p
  && pip install torch-geometric \
  && pip cache purge
 
+ENV GRPC_HEALTH_PROBE_VERSION v0.4.6
+
 RUN git clone https://github.com/skirpichenko/TigerAutoGL.git
 RUN pip install nni 
 RUN cd ./TigerAutoGL/AutoGL && python setup.py install
-
-ENV GRPC_HEALTH_PROBE_VERSION v0.4.6
 
 RUN if [ "$(uname -m)" = "ppc64le" ] || [ "$(uname -m)" = "aarch64" ]; then \
     apt-get -y update && \
@@ -54,24 +54,12 @@ RUN if [ "$(uname -m)" = "ppc64le" ]; then \
     fi && \
     chmod +x /bin/grpc_health_probe
 
-ENV TARGET_DIR /opt/katib
-ENV SUGGESTION_DIR cmd/suggestion/hyperopt/v1beta1
+ENV TARGET_DIR /opt/TigerAutoGL/Katib/sg-controller
+WORKDIR ${TARGET_DIR}
+RUN chgrp -R 0 ${TARGET_DIR} \
+  && chmod -R g+rwX ${TARGET_DIR} \
+  && chmod +X ${TARGET_DIR}/run.sh
 
-#ADD ./pkg/ ${TARGET_DIR}/pkg/
-#ADD ./${SUGGESTION_DIR}/ ${TARGET_DIR}/${SUGGESTION_DIR}/
-#WORKDIR  ${TARGET_DIR}/${SUGGESTION_DIR}
-#RUN pip install --no-cache-dir -r requirements.txt
-#RUN pip install --no-cache-dir cloudpickle
-
-#ADD ./run.sh ${TARGET_DIR}/${SUGGESTION_DIR}/
-
-#RUN chgrp -R 0 ${TARGET_DIR} \
-#  && chmod -R g+rwX ${TARGET_DIR} \
-#  && chmod +X ${TARGET_DIR}/${SUGGESTION_DIR}/run.sh
-
-#ENV PYTHONPATH ${TARGET_DIR}:${TARGET_DIR}/pkg/apis/manager/v1beta1/python:${TARGET_DIR}/pkg/apis/manager/health/python
-
-#ENTRYPOINT ["python", "main.py"]
-
-#ENTRYPOINT  ./run.sh
-
+RUN pip install --no-cache-dir -r requirements.txt
+ENV PYTHONPATH ${TARGET_DIR}:${TARGET_DIR}/pkg/apis/manager/v1beta1/python:${TARGET_DIR}/pkg/apis/manager/health/python
+ENTRYPOINT  ./run.sh
