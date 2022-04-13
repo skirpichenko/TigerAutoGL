@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from requests import request
 import grpc
 import time
 from pkg.apis.manager.v1beta1.python import api_pb2_grpc
@@ -36,7 +37,21 @@ def serve():
             time.sleep(_ONE_DAY_IN_SECONDS)
     except KeyboardInterrupt:
         server.stop(0)
+    
 
 
 if __name__ == "__main__":
-    serve()
+    from pkg.apis.manager.v1beta1.python.api_pb2 import GetSuggestionsRequest, AlgorithmSetting
+    print ('Loading AutpGL spec...')
+    with open('autogl_spec.yaml') as f:
+        spec = f.read()
+        spec = spec.replace('\n', '#')
+        
+    request = GetSuggestionsRequest()
+    autogl_setting = AlgorithmSetting(name='autogl_spec', value=spec)
+    request.experiment.spec.algorithm.algorithm_settings.append(autogl_setting)
+    
+    service = HyperoptService()
+    service.GetSuggestions(request, None)
+    
+    #serve()
