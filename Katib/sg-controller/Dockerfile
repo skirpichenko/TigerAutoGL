@@ -17,7 +17,7 @@ WORKDIR /opt
 ENV CONDA_AUTO_UPDATE_CONDA=false \
     PATH=/opt/miniconda/bin:$PATH
 COPY environment.yml /opt/environment.yml
-RUN curl -sLo /opt/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh \
+RUN curl -sLo /opt/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-py37_4.11.0-Linux-x86_64.sh \
  && chmod +x /opt/miniconda.sh \
  && /opt/miniconda.sh -b -p /opt/miniconda \
  && rm /opt/miniconda.sh \
@@ -60,6 +60,7 @@ RUN chgrp -R 0 ${TARGET_DIR} \
   && chmod -R g+rwX ${TARGET_DIR} \
   && chmod +X ${TARGET_DIR}/run.sh
 
+COPY requirements.txt ${TARGET_DIR}/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 ENV PYTHONPATH ${TARGET_DIR}:${TARGET_DIR}/pkg/apis/manager/v1beta1/python:${TARGET_DIR}/pkg/apis/manager/health/python
 ENTRYPOINT  ./run.sh
