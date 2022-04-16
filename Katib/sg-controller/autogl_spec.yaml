@@ -1,37 +1,32 @@
 ensemble:
   name: null
 feature:
-- name: PYGNormalizeFeatures
+- name: NormalizeFeatures
 hpo:
   max_evals: 10
   name: random
 models:
 - hp_space:
-  - feasiblePoints: 2,3
+  - feasiblePoints: '2'
     parameterName: num_layers
     type: DISCRETE
   - cutFunc: lambda x:x[0] - 1
     cutPara:
     - num_layers
-    length: 2
+    length: 1
     maxValue:
-    - 32
-    - 32
+    - 64
     minValue:
-    - 8
-    - 8
+    - 16
     numericalType: INTEGER
     parameterName: hidden
     scalingType: LOG
     type: NUMERICAL_LIST
-  - maxValue: 0.5
+  - maxValue: 0.8
     minValue: 0.2
     parameterName: dropout
     scalingType: LINEAR
     type: DOUBLE
-  - feasiblePoints: 8,10,12
-    parameterName: heads
-    type: DISCRETE
   - feasiblePoints:
     - leaky_relu
     - relu
@@ -39,25 +34,25 @@ models:
     - tanh
     parameterName: act
     type: CATEGORICAL
-  name: gat
+  name: gcn-model
 trainer:
   hp_space:
-  - maxValue: 400
-    minValue: 250
+  - maxValue: 300
+    minValue: 100
     parameterName: max_epoch
     scalingType: LINEAR
     type: INTEGER
-  - maxValue: 40
-    minValue: 25
+  - maxValue: 30
+    minValue: 10
     parameterName: early_stopping_round
     scalingType: LINEAR
     type: INTEGER
   - maxValue: 0.05
-    minValue: 0.01
+    minValue: 0.005
     parameterName: lr
     scalingType: LOG
     type: DOUBLE
-  - maxValue: 0.0005
+  - maxValue: 0.001
     minValue: 0.0001
     parameterName: weight_decay
     scalingType: LOG

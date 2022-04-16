@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
 import grpc
+import yaml
 
 from pkg.apis.manager.v1beta1.python import api_pb2
 from pkg.apis.manager.v1beta1.python import api_pb2_grpc
@@ -23,9 +23,27 @@ from pkg.suggestion.v1beta1.internal.trial import Trial, Assignment
 from pkg.suggestion.v1beta1.hyperopt.base_service import BaseHyperoptService
 from pkg.suggestion.v1beta1.internal.base_health_service import HealthServicer
 
-from autogl.solver import AutoNodeClassifier
+import torch.backends.cudnn
+import numpy as np
 
-logger = logging.getLogger(__name__)
+from autogl.datasets import build_dataset_from_name
+from autogl.solver.classifier.node_classifier import AutoNodeClassifier
+from autogl.module import Acc
+from autogl.backend import DependentBackend
+
+import logging
+LOGGER = logging.getLogger()
+LOGGER.setLevel(logging.INFO)
+
+def RunAutoGL(spec):
+    dataset = build_dataset_from_name("cora")
+    label = dataset[0].nodes.data["y" if DependentBackend.is_pyg() else "label"]
+    LOGGER.info(label)
+    num_classes = len(np.unique(label.numpy()))
+    configs = yaml.load(spec, Loader=yaml.FullLoader)
+    
+    autoClassifier = AutoNodeClassifier.from_config(configs)
+    autoClassifier.fit(dataset, time_limit=3600, evaluation_method=[Acc])
 
 class HyperoptService(api_pb2_grpc.SuggestionServicer, HealthServicer):
 
@@ -36,12 +54,15 @@ class HyperoptService(api_pb2_grpc.SuggestionServicer, HealthServicer):
 
     def GetSuggestions(self, request, context):
         if self.is_first_run:
-            logger.info("AutoGL suggestion service")
+            LOGGER.info("AutoGL suggestion service")
             
             for s in request.experiment.spec.algorithm.algorithm_settings:
+                print (s.name)
                 if s.name == 'autogl_spec':
-                    logger.info(type(s.value))
-                    logger.info(s.value.replace('#','\n'))
+                    #logger.info(type(s.value))
+                    #logger.info(s.value.replace('#','\n'))
+                    RunAutoGL(s.value.replace('#','\n'))
+            self.is_first_run = False
                     
     def ValidateAlgorithmSettings(self, request, context):
         is_valid = True
@@ -49,7 +70,7 @@ class HyperoptService(api_pb2_grpc.SuggestionServicer, HealthServicer):
             message = "invalid syntax"
             context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
             context.set_details(message)
-            logger.error(message)
+            LOGGER.error(message)
         return api_pb2.ValidateAlgorithmSettingsReply()
             
 

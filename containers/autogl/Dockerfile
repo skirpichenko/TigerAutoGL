@@ -47,6 +47,12 @@ WORKDIR /home/user
 # Set the default command to python3
 # CMD ["python3"]
 
-RUN git clone https://github.com/skirpichenko/TigerAutoGL.git
 RUN pip install nni 
+RUN git clone https://github.com/skirpichenko/TigerAutoGL.git
 RUN cd ./TigerAutoGL/AutoGL && python setup.py install
+# dev time only
+RUN pip install -e /home/user/TigerAutoGL/AutoGL
+
+ENV PYTHONPATH /home/user/TigerAutoGL:${PYTHONPATH}
+WORKDIR /home/user/TigerAutoGL/containers/autogl
+ENTRYPOINT  ./run.sh

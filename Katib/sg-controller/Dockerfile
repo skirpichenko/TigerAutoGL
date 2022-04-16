@@ -17,7 +17,7 @@ WORKDIR /opt
 ENV CONDA_AUTO_UPDATE_CONDA=false \
     PATH=/opt/miniconda/bin:$PATH
 COPY environment.yml /opt/environment.yml
-RUN curl -sLo /opt/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-py37_4.11.0-Linux-x86_64.sh \
+RUN curl -sLo /opt/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-py39_4.11.0-Linux-x86_64.sh \
  && chmod +x /opt/miniconda.sh \
  && /opt/miniconda.sh -b -p /opt/miniconda \
  && rm /opt/miniconda.sh \
@@ -37,6 +37,8 @@ ENV GRPC_HEALTH_PROBE_VERSION v0.4.6
 RUN git clone https://github.com/skirpichenko/TigerAutoGL.git
 RUN pip install nni 
 RUN cd ./TigerAutoGL/AutoGL && python setup.py install
+# dev time  only
+RUN pip install -e /opt/TigerAutoGL/AutoGL
 
 RUN if [ "$(uname -m)" = "ppc64le" ] || [ "$(uname -m)" = "aarch64" ]; then \
     apt-get -y update && \
@@ -62,5 +64,5 @@ RUN chgrp -R 0 ${TARGET_DIR} \
 
 COPY requirements.txt ${TARGET_DIR}/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-ENV PYTHONPATH ${TARGET_DIR}:${TARGET_DIR}/pkg/apis/manager/v1beta1/python:${TARGET_DIR}/pkg/apis/manager/health/python
+ENV PYTHONPATH /opt/TigerAutoGL:${TARGET_DIR}:${TARGET_DIR}/pkg/apis/manager/v1beta1/python:${TARGET_DIR}/pkg/apis/manager/health/python
 ENTRYPOINT  ./run.sh
