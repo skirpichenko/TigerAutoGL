@@ -383,7 +383,7 @@ class _BaseClassificationTrainer(BaseTrainer):
     @decoder.setter
     def decoder(self, dec: _typing.Union[BaseDecoderMaintainer, str, None]):
         if isinstance(self.encoder, BaseAutoModel):
-            logging.warn("Ignore passed dec since enc is a whole model")
+            logging.debug("Ignore passed dec since enc is a whole model")
             self._decoder = None
             return
         if isinstance(dec, str):

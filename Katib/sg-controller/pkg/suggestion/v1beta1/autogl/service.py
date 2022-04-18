@@ -30,6 +30,7 @@ from autogl.datasets import build_dataset_from_name
 from autogl.solver.classifier.node_classifier import AutoNodeClassifier
 from autogl.module import Acc
 from autogl.backend import DependentBackend
+from autogl.module.model.pyg._model_registry import MODEL_DICT
 
 import logging
 LOGGER = logging.getLogger()
@@ -44,6 +45,8 @@ def RunAutoGL(spec):
     
     autoClassifier = AutoNodeClassifier.from_config(configs)
     autoClassifier.fit(dataset, time_limit=3600, evaluation_method=[Acc])
+    
+    print (MODEL_DICT)
 
 class HyperoptService(api_pb2_grpc.SuggestionServicer, HealthServicer):
 

@@ -7,7 +7,7 @@ hpo:
   name: random
 models:
 - hp_space:
-  - feasiblePoints: '2'
+  - feasiblePoints: '2,3'
     parameterName: num_layers
     type: DISCRETE
   - cutFunc: lambda x:x[0] - 1
