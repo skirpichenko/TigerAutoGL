@@ -405,16 +405,17 @@ class AutoNodeClassifier(BaseClassifier):
             name = str(optimized) + "_idx%d" % (idx)
             names.append(name)
             performance_on_valid, _ = optimized.get_valid_score(return_major=False)
-            result_valid.append(optimized.get_valid_predict_proba().cpu().numpy())
-            self.leaderboard.insert_model_performance(
-                name,
-                dict(
-                    zip(
-                        [e.get_eval_name() for e in evaluator_list],
-                        performance_on_valid,
-                    )
-                ),
-            )
+            if optimized.get_valid_predict_proba()is not None:
+                result_valid.append(optimized.get_valid_predict_proba().cpu().numpy())
+                self.leaderboard.insert_model_performance(
+                    name,
+                    dict(
+                        zip(
+                            [e.get_eval_name() for e in evaluator_list],
+                            performance_on_valid,
+                        )
+                    ),
+                )
             self.trained_models[name] = optimized
 
         # fit the ensemble model

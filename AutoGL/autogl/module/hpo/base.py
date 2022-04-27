@@ -16,6 +16,7 @@ mp.set_start_method("spawn", True)
 
 LOGGER = get_logger("HPO")
 
+HP_LIST = []
 
 class BaseHPOptimizer:
     def __init__(self, *args, **kwargs):
