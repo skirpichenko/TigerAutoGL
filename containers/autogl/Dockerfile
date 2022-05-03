@@ -36,9 +36,6 @@ RUN curl -sLo ~/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-py39
  && rm /app/environment.yml \
  && conda clean -ya
 
-# Set the default command to python3
-CMD ["python3"]
-
 RUN pip install --no-index torch-scatter -f https://data.pyg.org/whl/torch-1.10.0+cu113.html \
  && pip install --no-index torch-sparse -f https://data.pyg.org/whl/torch-1.10.0+cu113.html \
  && pip install --no-index torch-cluster -f https://data.pyg.org/whl/torch-1.10.0+cu113.html \
@@ -47,6 +44,15 @@ RUN pip install --no-index torch-scatter -f https://data.pyg.org/whl/torch-1.10.
 
 WORKDIR /home/user
 
-RUN git clone https://github.com/skirpichenko/TigerAutoGL.git
+# Set the default command to python3
+# CMD ["python3"]
+
 RUN pip install nni 
+RUN git clone https://github.com/skirpichenko/TigerAutoGL.git
 RUN cd ./TigerAutoGL/AutoGL && python setup.py install
+# dev time only
+RUN pip install -e /home/user/TigerAutoGL/AutoGL
+
+ENV PYTHONPATH /home/user/TigerAutoGL:${PYTHONPATH}
+WORKDIR /home/user/TigerAutoGL/containers/autogl
+ENTRYPOINT  ./run.sh

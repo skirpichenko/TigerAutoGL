@@ -1,1 +1,1 @@
-FROM docker.io/kubeflowkatib/enas-cnn-cifar10-cpu:latest
+FROM docker.io/skirpichenko/tigergraph:katibcora
