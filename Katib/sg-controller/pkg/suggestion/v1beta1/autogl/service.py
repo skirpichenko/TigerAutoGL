@@ -31,22 +31,76 @@ from autogl.solver.classifier.node_classifier import AutoNodeClassifier
 from autogl.module import Acc
 from autogl.backend import DependentBackend
 from autogl.module.model.pyg._model_registry import MODEL_DICT
+from autogl.module.hpo.base import HP_LIST
 
 import logging
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
 
+import types
+
+# class Model(object):
+#     def __init__(self):
+#         pass
+#     def train(self, param1, param2):
+#         print ('model/tran', param1, param2)
+
+
+def train_wrap(self, *arg, **kwargs):
+    print ('wrapped train')
+    return self._original_train(*arg, **kwargs)
+
+# if __name__ == '__main__':
+#     model_reg = {'model': Model()}
+
+#     for name, model in model_reg.items():
+#         model._original_train = model.train
+#         model.train = types.MethodType(train_wrap, model)
+
+#     model_reg['model'].train('param1', 'param2')
+
+from google.cloud import storage
+import tempfile
+import joblib
+ 
+
 def RunAutoGL(spec):
+    HP_LIST['State'] = 'Collecting'
     dataset = build_dataset_from_name("cora")
     label = dataset[0].nodes.data["y" if DependentBackend.is_pyg() else "label"]
     LOGGER.info(label)
     num_classes = len(np.unique(label.numpy()))
     configs = yaml.load(spec, Loader=yaml.FullLoader)
     
+
+    
+    # for name, model in MODEL_DICT.items():
+    #     print (name)
+    #     model._original_train = model.initialize
+    #     model.initialize = types.MethodType(train_wrap, model)
+        
+   # print (MODEL_DICT)
+    
     autoClassifier = AutoNodeClassifier.from_config(configs)
     autoClassifier.fit(dataset, time_limit=3600, evaluation_method=[Acc])
     
-    print (MODEL_DICT)
+    print (HP_LIST)
+    
+   # print (MODEL_DICT)
+   
+    # Instantiates a client
+    storage_client = storage.Client()
+    # The name for the new bucket
+    bucket_name = "automl-cache"
+    # Creates the new bucket
+    bucket = storage_client.bucket(bucket_name)
+    destination_blob_name = "dataset.pickle"
+    blob = bucket.blob(destination_blob_name)
+    tmp_file_name = tempfile.gettempdir()+'/'+destination_blob_name
+    # read in
+    blob.download_to_filename(tmp_file_name)
+    dataset = joblib.load(tmp_file_name)
+    print (dataset)
 
 class HyperoptService(api_pb2_grpc.SuggestionServicer, HealthServicer):
 

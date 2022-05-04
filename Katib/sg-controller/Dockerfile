@@ -64,6 +64,7 @@ RUN chgrp -R 0 ${TARGET_DIR} \
 
 COPY requirements.txt ${TARGET_DIR}/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir google-cloud-storage
 ENV PYTHONPATH /opt/TigerAutoGL:${TARGET_DIR}:${TARGET_DIR}/pkg/apis/manager/v1beta1/python:${TARGET_DIR}/pkg/apis/manager/health/python
 RUN git config --global --add safe.directory /opt/TigerAutoGL
 ENTRYPOINT  ./run.sh

@@ -1,4 +1,4 @@
     #!/usr/bin/env bash
-    git pull
+    # git pull
     #echo "arguments:" "$@"
     python3 main.py "$@"

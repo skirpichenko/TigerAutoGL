@@ -26,3 +26,10 @@ class ModelUniversalRegistry:
         if name not in MODEL_DICT:
             raise KeyError(f"Do not support {name} model in pyg backend")
         return MODEL_DICT.get(name)
+    
+    @classmethod
+    def get_model_name(cls, obj):
+        for name, cls_type in MODEL_DICT.items():
+            if isinstance(obj, cls_type):
+                return name
+        return None
