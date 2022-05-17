@@ -13,6 +13,7 @@ import yaml
 
 from .base import BaseClassifier
 from ..base import _parse_hp_space, _initialize_single_model, _parse_model_hp
+from ...module.hpo.base import HP_LIST
 from ...module.feature import FEATURE_DICT
 from ...module.train import TRAINER_DICT, BaseNodeClassificationTrainer
 from ...module.train import get_feval
@@ -419,7 +420,7 @@ class AutoNodeClassifier(BaseClassifier):
             self.trained_models[name] = optimized
 
         # fit the ensemble model
-        if self.ensemble_module is not None:
+        if self.ensemble_module is not None and HP_LIST.get('State') != 'Collecting':
             performance = self.ensemble_module.fit(
                 result_valid,
                 all_labels[get_graph_masks(graph_data, 'val')].cpu().numpy(),
