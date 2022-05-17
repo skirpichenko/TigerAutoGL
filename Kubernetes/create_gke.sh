@@ -99,7 +99,7 @@ for i in 1 2 3 4 5 ; do kubectl apply -f https://github.com/kserve/kserve/releas
 rm -rf istio-${ISTIO_VERSION}
 
 # configure the DNS for Knative that points to the sslip.io domain.
-# kubectl apply -f https://github.com/knative/serving/releases/download/${KNATIVE_VERSION}/serving-default-domain.yaml
+kubectl apply -f https://github.com/knative/serving/releases/download/${KNATIVE_VERSION}/serving-default-domain.yaml
 
 kubectl get pods -A
 
