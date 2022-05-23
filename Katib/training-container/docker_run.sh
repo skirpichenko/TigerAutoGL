@@ -1,2 +1,2 @@
  #!/usr/bin/env bash
- docker run --rm -i -t -v /home/sergey.kirpichenko/TigerAutoGL:/opt/TigerAutoGL sg-controller 
+ docker run --rm -i -t -v $HOME/TigerAutoGL/Katib/training-container:/opt/training-container autogl-training-container

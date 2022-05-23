@@ -32,5 +32,17 @@ RUN curl -sLo /opt/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-p
  && pip install torch-geometric \
  && pip cache purge
 
-#COPY ../../. /opt/TigerAutoGL
+# install AutoGL
+COPY ./AutoGL /opt/AutoGL
+RUN pip install nni 
+RUN cd /opt/AutoGL && python setup.py install
 
+COPY ./Katib/training-container /opt/training-container
+
+ENV TARGET_DIR /opt/training-container
+WORKDIR ${TARGET_DIR}
+RUN chgrp -R 0 ${TARGET_DIR} \
+  && chmod -R g+rwX ${TARGET_DIR} \
+  && chmod +X ${TARGET_DIR}/run.sh
+
+ENTRYPOINT  ./run.sh
