@@ -10,9 +10,7 @@ from .suggestion.models import Study
 from .base import BaseHPOptimizer, TimeTooLimitedError
 from .suggestion.algorithm.random_search import RandomSearchAlgorithm
 from .suggestion.algorithm.mocmaes import MocmaesAlgorithm
-from .base import HP_LIST
-from autogl.module.model.pyg._model_registry import ModelUniversalRegistry
-import joblib
+
 
 class AdvisorBaseHPOptimizer(BaseHPOptimizer):
     """
@@ -142,20 +140,11 @@ class AdvisorBaseHPOptimizer(BaseHPOptimizer):
         self._setUp(current_space)
 
         start_time = time.time()
-        
-        print (ModelUniversalRegistry.get_model_name(trainer.encoder))
-        return
 
         def fn(x):
             current_trainer = trainer.duplicate_from_hyper_parameter(x)
-            if HP_LIST['State'] == 'Collecting':
-                HP_LIST['Suggestions'].append(x)
-                print (joblib.hash(dataset))
-                loss = 0.1
-            else:
-                current_trainer.train(dataset)
-                loss, self.is_higher_better = current_trainer.get_valid_score(dataset)
-            
+            current_trainer.train(dataset)
+            loss, self.is_higher_better = current_trainer.get_valid_score(dataset)
             if self.is_higher_better:
                 loss = -loss
             return current_trainer, loss
