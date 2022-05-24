@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 echo "autogl-training-container is starting"
-export AUTOGL_SPEC=$(cat autogl_spec.yaml)
-
+# replace newline wirh '#'
+export AUTOGL_SPEC=$(sed -z 's/\n/#/g;s/#$/\n/' autogl_spec.yaml)
+# run training
 python3 main.py "$@"
