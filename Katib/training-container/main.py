@@ -11,8 +11,11 @@ import os
 import logging
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
+FORMAT = '%(asctime)-15s Experiment %(experiment_name)s %(message)s'
+logging.basicConfig(format=FORMAT)
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
+# 2022-05-24T11:25:03Z
 
 if __name__ == "__main__":
     autogl_spec = os.getenv('AUTOGL_SPEC')
@@ -21,6 +24,7 @@ if __name__ == "__main__":
         autogl_spec = ""
     else:
         autogl_spec = autogl_spec.replace('#', '\n')
+        print (autogl_spec)
         
     parser = ArgumentParser(
         "auto node classification", formatter_class=ArgumentDefaultsHelpFormatter
@@ -79,6 +83,6 @@ if __name__ == "__main__":
         )
     autoClassifier.get_leaderboard().show()
     acc = autoClassifier.evaluate(metric="acc")
-    LOGGER.info("Train-accuracy={:.4f}".format(0.92+np.random.uniform(0.01,0.05)))
-    LOGGER.info("Validation-accuracy={:.4f}".format(acc))
+ #   LOGGER.info("Train-accuracy={:.4f}".format(0.92+np.random.uniform(0.01,0.05)))
+ #   LOGGER.info("Validation-accuracy={:.4f}".format(acc))
 

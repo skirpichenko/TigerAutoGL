@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.3.1-base-ubuntu20.04
+FROM nvidia/cuda:11.3.0-base-ubuntu20.04
 
 # Install some basic utilities
 RUN apt-get update && apt-get install -y \
@@ -35,7 +35,9 @@ RUN curl -sLo /opt/miniconda.sh https://repo.continuum.io/miniconda/Miniconda3-p
 # install AutoGL
 COPY ./AutoGL /opt/AutoGL
 RUN pip install nni 
-RUN cd /opt/AutoGL && python setup.py install
+# RUN cd /opt/AutoGL && python setup.py install
+# dev time only
+RUN pip install -e /opt/AutoGL
 
 COPY ./Katib/training-container /opt/training-container
 
