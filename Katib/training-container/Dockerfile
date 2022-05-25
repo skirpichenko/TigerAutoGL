@@ -48,3 +48,4 @@ RUN chgrp -R 0 ${TARGET_DIR} \
   && chmod +X ${TARGET_DIR}/run.sh
 
 ENTRYPOINT  ./run.sh
+# ENTRYPOINT ["python3", "-u", "RunTrial.py"]
