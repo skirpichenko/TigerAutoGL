@@ -25,9 +25,10 @@ docker build --rm -t kserve-base:${version} .
 
 echo ---- Pushing to docker hub ----
 # replace "skirpichenko" with "tigergraphml"
-export DOCKER_USER=skirpichenko
-docker tag kserve-base:${version} skirpichenko/kserve-base:${version}
-docker push skirpichenko/kserve-base:${version}
+DOCKER_USER=skirpichenko
+docker tag kserve-base:${version} ${DOCKER_USER}/kserve-base:${version}
+docker push ${DOCKER_USER}/kserve-base:${version}
 
 #echo ---- Clean up ----
 #rm -rf mlworkbench-docs
+echo ${DOCKER_USER}
