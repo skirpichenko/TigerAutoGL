@@ -1,0 +1,9 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: tg-gcn-kserve-demo
+spec:
+  predictor:
+    containers:
+      - name: kserve-base
+        image: skirpichenko/kserve-base:latest
