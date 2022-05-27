@@ -61,4 +61,4 @@ class GCNNodeClassifier(kserve.Model):
 
 if __name__ == "__main__":
     model = GCNNodeClassifier("tg-gcn-kserve-demo")
-    kserve.ModelServer(http_port=8081).start([model])
+    kserve.ModelServer(http_port=8080).start([model])
