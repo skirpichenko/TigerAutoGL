@@ -4,6 +4,7 @@ from typing import Dict
 import logging
 import pyTigerGraph as tg
 from torch_geometric.nn import GCN
+import os
 
 logger = logging.getLogger(__name__)
 conn = tg.TigerGraphConnection("http://35.230.92.92", graphname="Cora")
@@ -60,5 +61,8 @@ class GCNNodeClassifier(kserve.Model):
         return ret
 
 if __name__ == "__main__":
-    model = GCNNodeClassifier("tg-gcn-kserve-demo")
+    model_name = os.environ.get('K_SERVICE', "tg-gcn-kserve-demo-predictor-default")
+    model_name = '-'.join(model_name.split('-')[:-2]) # removing suffix "-predictor-default"
+    logging.info(f"Starting model '{model_name}'")
+    model = GCNNodeClassifier(model_name)
     kserve.ModelServer(http_port=8080).start([model])
