@@ -1,0 +1,9 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: tg-gcn-kserve-autogl
+spec:
+  predictor:
+    containers:
+      - name: kserve-autogl
+        image: skirpichenko/kserve-autogl:latest
